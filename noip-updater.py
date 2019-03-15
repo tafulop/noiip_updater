@@ -4,12 +4,13 @@ import datetime
 
 # user config
 debug_print_flag = True
-user_id = "cmFzcGJlcnJ5LnBpZS56ZXJvQGdtYWlsLmNvbQ=="
-auth_key = "Qkw0Y2tjQHQ="
-hostname = "raspberrypiezero.ddns.net"
+user_id = "" # base64 encoded username
+auth_key = "" # base64 encoded password
+hostname = "" # name of the DDNS host (eg. raspberrypiezeero.ddns.net)
+headers = {'user-agent': 'noip-updater on Raspbian/1.0.0 tamas.flp@gmail.com'}
 
 # const
-noip_url = "http://" + user_id + \
+noip_url = "https://" + user_id + \
            ":" + auth_key + \
            "@dynupdate.no-ip.com/nic/update?hostname=" + hostname + \
            "&myip=" \
@@ -28,7 +29,7 @@ def request_ip():
 
 def update_noip(public_ip):
     debug_print("Trying to update IP to: " + public_ip)
-    r = requests.post(noip_url + public_ip)
+    r = requests.get(noip_url + public_ip, headers=headers)
     debug_print("Response: " + r.text)      # response as a string
 
 # Start
