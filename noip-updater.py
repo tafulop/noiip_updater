@@ -1,4 +1,5 @@
 import requests
+from requests.auth import HTTPDigestAuth
 import json
 import datetime
 
@@ -10,9 +11,7 @@ hostname = "" # name of the DDNS host (eg. raspberrypiezeero.ddns.net)
 headers = {'user-agent': 'noip-updater on Raspbian/1.0.0 tamas.flp@gmail.com'}
 
 # const
-noip_url = "https://" + user_id + \
-           ":" + auth_key + \
-           "@dynupdate.no-ip.com/nic/update?hostname=" + hostname + \
+noip_url = "https://" + user_id + ":" + auth_key + "@dynupdate.no-ip.com/nic/update?hostname=" + hostname + \
            "&myip=" \
 
 def debug_print(msg):
@@ -28,6 +27,8 @@ def request_ip():
     return json_res["ip"]
 
 def update_noip(public_ip):
+    session = requests.Session()
+    session.auth = (user_id, auth_key)
     debug_print("Trying to update IP to: " + public_ip)
     r = requests.post(noip_url + public_ip, headers=headers)
     #debug_print("Request string:\n" + noip_url + public_ip)
